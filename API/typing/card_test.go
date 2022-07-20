@@ -1,7 +1,8 @@
 package typing
 
 import (
-	"errors"
+	"eisandbar/poker/util"
+
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -35,43 +36,37 @@ func (suite *CardTestSuite) TestToString() {
 }
 
 func (suite *CardTestSuite) TestFromIntZero() {
-	card := Card{}
-	err := card.FromInt(0)
+	card, err := CardFromInt(0)
 	suite.Equal(Card{}, card)
 	suite.Equal(nil, err)
 }
 func (suite *CardTestSuite) TestFromInt() {
-	card := Card{}
-	err := card.FromInt(36)
+	card, err := CardFromInt(36)
 	suite.Equal(testCard, card)
 	suite.Equal(nil, err)
 }
 
 func (suite *CardTestSuite) TestFromIntBadInput() {
-	card := Card{}
-	err := card.FromInt(100)
-	suite.Equal(errors.New("Bad Input"), err)
+	_, err := CardFromInt(100)
+	suite.Equal(util.BadInput, err)
 }
 
 func (suite *CardTestSuite) TestFromStringZero() {
-	card := Card{}
-	err := card.FromString("2D")
+	card, err := CardFromString("2D")
 	suite.Equal(Card{}, card)
 	suite.Equal(nil, err)
 }
 
 func (suite *CardTestSuite) TestFromString() {
-	card := Card{}
-	err := card.FromString("QH")
+	card, err := CardFromString("QH")
 	suite.Equal(testCard, card)
 	suite.Equal(nil, err)
 }
 
 func (suite *CardTestSuite) TestFromStringBadInput() {
-	card := Card{}
-	err := card.FromString("1D")
+	card, err := CardFromString("1D")
 	suite.Equal(Card{}, card)
-	suite.Equal(errors.New("Bad Input"), err)
+	suite.Equal(util.BadInput, err)
 }
 
 func TestCardTestSuite(t *testing.T) {

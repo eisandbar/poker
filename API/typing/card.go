@@ -1,7 +1,8 @@
 package typing
 
 import (
-	"errors"
+	"eisandbar/poker/util"
+
 	"regexp"
 )
 
@@ -21,11 +22,12 @@ func (card Card) ToInt() int {
 	return card.Suit*13 + card.Value
 }
 
-func (card *Card) FromString(input string) error {
+func CardFromString(input string) (Card, error) {
 	match, _ := regexp.MatchString("[2-9TJQKA][DCHS]", input)
 	if !match {
-		return errors.New("Bad Input")
+		return Card{}, util.BadInput
 	}
+	card := Card{}
 	for i, val := range values {
 		if input[0:1] == val {
 			card.Value = i
@@ -36,13 +38,14 @@ func (card *Card) FromString(input string) error {
 			card.Suit = i
 		}
 	}
-	return nil
+	return card, nil
 }
 
-func (card *Card) FromInt(input int) error {
+func CardFromInt(input int) (Card, error) {
 	if input < 0 || input >= 52 {
-		return errors.New("Bad Input")
+		return Card{}, util.BadInput
 	}
+	card := Card{}
 	card.Suit, card.Value = input/13, input%13
-	return nil
+	return card, nil
 }
