@@ -7,5 +7,6 @@ type Odds struct {
 }
 
 func (odds *Odds) Normalize() {
-
+	sum := odds.win + odds.draw + odds.lose
+	odds.win, odds.draw, odds.lose = odds.win/sum, odds.draw/sum, odds.lose/sum
 }
