@@ -1,12 +1,12 @@
 package typing
 
 type Odds struct {
-	win  float64
-	draw float64
-	lose float64
+	Win  float64
+	Draw float64
+	Lose float64
 }
 
 func (odds *Odds) Normalize() {
-	sum := odds.win + odds.draw + odds.lose
-	odds.win, odds.draw, odds.lose = odds.win/sum, odds.draw/sum, odds.lose/sum
+	sum := odds.Win + odds.Draw + odds.Lose
+	odds.Win, odds.Draw, odds.Lose = odds.Win/sum, odds.Draw/sum, odds.Lose/sum
 }

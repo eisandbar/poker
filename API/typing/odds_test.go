@@ -11,9 +11,9 @@ type OddsTestSuite struct {
 }
 
 var testOdds = Odds{
-	win:  124,
-	draw: 81,
-	lose: 44,
+	Win:  124,
+	Draw: 81,
+	Lose: 44,
 }
 
 const tolerance = 0.01
@@ -21,22 +21,22 @@ const tolerance = 0.01
 func (suite *OddsTestSuite) TestNormalizeSum() {
 	odds := testOdds
 	odds.Normalize()
-	sum := odds.win + odds.draw + odds.lose
+	sum := odds.Win + odds.Draw + odds.Lose
 	suite.InDelta(1, sum, tolerance)
 }
 
 func (suite *OddsTestSuite) TestNormalizeWinLose() {
 	odds := testOdds
-	winLose := odds.win / odds.lose
+	winLose := odds.Win / odds.Lose
 	odds.Normalize()
-	suite.InDelta(winLose, odds.win/odds.lose, tolerance)
+	suite.InDelta(winLose, odds.Win/odds.Lose, tolerance)
 }
 
 func (suite *OddsTestSuite) TestNormalizeWinDraw() {
 	odds := testOdds
-	winLose := odds.win / odds.draw
+	winLose := odds.Win / odds.Draw
 	odds.Normalize()
-	suite.InDelta(winLose, odds.win/odds.draw, tolerance)
+	suite.InDelta(winLose, odds.Win/odds.Draw, tolerance)
 }
 
 func TestOddsTestSuite(t *testing.T) {
