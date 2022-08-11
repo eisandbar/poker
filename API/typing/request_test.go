@@ -94,11 +94,11 @@ func (suite *RequestTestSuite) TestConvertGood() {
 	req := testRequest
 	suite.T().Log(req)
 	cardReq, err := req.ConvertsRequest()
-	suite.Equal("AH", cardReq.PlayerHand[0].ToString())
-	suite.Equal("QH", cardReq.PlayerHand[1].ToString())
-	suite.Equal("AS", cardReq.OpponentHands[0][0].ToString())
-	suite.Equal("KS", cardReq.OpponentHands[0][1].ToString())
-	suite.Equal("JD", cardReq.BoardCards[2].ToString())
+	suite.Equal("AH", cardReq.PlayerHand[0].Value())
+	suite.Equal("QH", cardReq.PlayerHand[1].Value())
+	suite.Equal("AS", cardReq.OpponentHands[0][0].Value())
+	suite.Equal("KS", cardReq.OpponentHands[0][1].Value())
+	suite.Equal("JD", cardReq.BoardCards[2].Value())
 	suite.Equal(nil, err)
 }
 

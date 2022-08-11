@@ -1,74 +1,29 @@
-package typing
+package typing_test
 
 import (
+	"eisandbar/poker/typing"
 	"eisandbar/poker/util"
 
 	"testing"
 
-	"github.com/stretchr/testify/suite"
+	"github.com/stretchr/testify/assert"
 )
 
-type CardTestSuite struct {
-	suite.Suite
-}
+func TestNewCard(t *testing.T) {
+	testData := []struct {
+		name, card string
+		err        error
+	}{
+		{"Empty", "", util.BadInput},
+	}
+	for _, tt := range testData {
 
-var testCard = Card{
-	Value: 10, // Queen
-	Suit:  2,  // Hearts
-}
+		t.Run(tt.name, func(t *testing.T) {
+			card, err := typing.NewCard(tt.card)
+			assert.Equal(t, tt.err, err)
+			assert.Equal(t, tt.card, card.Value())
 
-func (suite *CardTestSuite) TestToIntEmpty() {
-	card := Card{}
-	suite.Equal(0, card.ToInt())
-}
-func (suite *CardTestSuite) TestToInt() {
-	card := testCard
-	suite.Equal(36, card.ToInt())
-}
-func (suite *CardTestSuite) TestToStringEmpty() {
-	card := Card{}
-	suite.Equal("2D", card.ToString())
-}
+		})
+	}
 
-func (suite *CardTestSuite) TestToString() {
-	card := testCard
-	suite.Equal("QH", card.ToString())
-}
-
-func (suite *CardTestSuite) TestFromIntZero() {
-	card, err := CardFromInt(0)
-	suite.Equal(Card{}, card)
-	suite.Equal(nil, err)
-}
-func (suite *CardTestSuite) TestFromInt() {
-	card, err := CardFromInt(36)
-	suite.Equal(testCard, card)
-	suite.Equal(nil, err)
-}
-
-func (suite *CardTestSuite) TestFromIntBadInput() {
-	_, err := CardFromInt(100)
-	suite.Equal(util.BadInput, err)
-}
-
-func (suite *CardTestSuite) TestFromStringZero() {
-	card, err := CardFromString("2D")
-	suite.Equal(Card{}, card)
-	suite.Equal(nil, err)
-}
-
-func (suite *CardTestSuite) TestFromString() {
-	card, err := CardFromString("QH")
-	suite.Equal(testCard, card)
-	suite.Equal(nil, err)
-}
-
-func (suite *CardTestSuite) TestFromStringBadInput() {
-	card, err := CardFromString("1D")
-	suite.Equal(Card{}, card)
-	suite.Equal(util.BadInput, err)
-}
-
-func TestCardTestSuite(t *testing.T) {
-	suite.Run(t, new(CardTestSuite))
 }

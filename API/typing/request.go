@@ -38,7 +38,7 @@ func (req Request) ConvertsRequest() (CardRequest, error) {
 	cardReq := CardRequest{}
 
 	for i, cardString := range req.PlayerHand {
-		card, err := CardFromString(cardString)
+		card, err := NewCard(cardString)
 		if err != nil || seenCards[card.ToInt()] {
 			return CardRequest{}, util.BadInput
 		}
@@ -47,7 +47,7 @@ func (req Request) ConvertsRequest() (CardRequest, error) {
 	}
 
 	for _, cardString := range req.BoardCards {
-		card, err := CardFromString(cardString)
+		card, err := NewCard(cardString)
 		if err != nil || seenCards[card.ToInt()] {
 			return CardRequest{}, util.BadInput
 		}
@@ -58,7 +58,7 @@ func (req Request) ConvertsRequest() (CardRequest, error) {
 	if len(req.OpponentHand) == 2 {
 		hand := [2]Card{}
 		for i, cardString := range req.OpponentHand {
-			card, err := CardFromString(cardString)
+			card, err := NewCard(cardString)
 			if err != nil || seenCards[card.ToInt()] {
 				return CardRequest{}, util.BadInput
 			}
