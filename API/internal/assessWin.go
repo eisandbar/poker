@@ -23,39 +23,20 @@ const (
 )
 
 // Given player and opponent hands and all boards cards assess who wins
-func AssessWin(playerHand, opponentHand, boardCards []string) (int, error) {
+func AssessWin(playerHand, opponentHand, boardCards []typing.Card) (int, error) {
 	if len(boardCards) != 5 || len(playerHand) != 2 || len(opponentHand) != 2 {
 		return 0, util.BadInput
 	}
 
-	player, opponent, board, err := convertInputs(playerHand, opponentHand, boardCards)
-	if err != nil {
-		return 0, fmt.Errorf("Error converting inputs, %w", err)
-	}
+	player, opponent, board := typing.ToInts(playerHand), typing.ToInts(opponentHand), typing.ToInts(boardCards)
 
 	if checkDuplicates(append(append(player, opponent...), board...)) {
-		return 0, fmt.Errorf("Duplicate cards detected, %w", err)
+		return 0, fmt.Errorf("Duplicate cards detected, %w", util.BadInput)
 	}
 
 	playerCombo, playerPriority := bestHand(player, board)
 	opponentCombo, opponentPriority := bestHand(opponent, board)
 	return compareCombo(playerCombo, opponentCombo, playerPriority, opponentPriority)
-}
-
-func convertInputs(playerHand, opponentHand, boardCards []string) ([]int, []int, []int, error) {
-	player, err := typing.ConvertStrings(playerHand)
-	if err != nil {
-		return nil, nil, nil, util.BadInput
-	}
-	opponent, err := typing.ConvertStrings(opponentHand)
-	if err != nil {
-		return nil, nil, nil, util.BadInput
-	}
-	board, err := typing.ConvertStrings(boardCards)
-	if err != nil {
-		return nil, nil, nil, util.BadInput
-	}
-	return player, opponent, board, nil
 }
 
 func checkDuplicates(input []int) bool {

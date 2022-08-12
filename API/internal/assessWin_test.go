@@ -2,14 +2,15 @@ package internal_test
 
 import (
 	"eisandbar/poker/internal"
+	"eisandbar/poker/typing"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAssessWin(t *testing.T) {
-	playerHand := []string{"AH", "KH"}
-	opponentHand := []string{"QH", "9D"}
+	playerHand, _ := typing.FromStrings([]string{"AH", "KH"})
+	opponentHand, _ := typing.FromStrings([]string{"QH", "9D"})
 	testBoards := []struct {
 		name       string
 		boardCards []string
@@ -29,8 +30,9 @@ func TestAssessWin(t *testing.T) {
 
 	for _, tt := range testBoards {
 		t.Run(tt.name, func(t *testing.T) {
+			board, _ := typing.FromStrings(tt.boardCards)
 
-			got, err := internal.AssessWin(playerHand, opponentHand, tt.boardCards)
+			got, err := internal.AssessWin(playerHand, opponentHand, board)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.res, got)
 		})
@@ -38,8 +40,8 @@ func TestAssessWin(t *testing.T) {
 }
 
 func TestAssessWinComplex(t *testing.T) {
-	playerHand := []string{"TH", "KH"}
-	opponentHand := []string{"TS", "QH"}
+	playerHand, _ := typing.FromStrings([]string{"TH", "KH"})
+	opponentHand, _ := typing.FromStrings([]string{"TS", "QH"})
 	testBoards := []struct {
 		name       string
 		boardCards []string
@@ -56,8 +58,8 @@ func TestAssessWinComplex(t *testing.T) {
 
 	for _, tt := range testBoards {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got, err := internal.AssessWin(playerHand, opponentHand, tt.boardCards)
+			board, _ := typing.FromStrings(tt.boardCards)
+			got, err := internal.AssessWin(playerHand, opponentHand, board)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.res, got)
 		})
@@ -65,8 +67,8 @@ func TestAssessWinComplex(t *testing.T) {
 }
 
 func TestAssessWinBadInput(t *testing.T) {
-	playerHand := []string{"TH", "KH"}
-	opponentHand := []string{"TS", "QH"}
+	playerHand, _ := typing.FromStrings([]string{"TH", "KH"})
+	opponentHand, _ := typing.FromStrings([]string{"TS", "QH"})
 	testBoards := []struct {
 		name       string
 		boardCards []string
@@ -80,7 +82,8 @@ func TestAssessWinBadInput(t *testing.T) {
 	for _, tt := range testBoards {
 		t.Run(tt.name, func(t *testing.T) {
 
-			_, err := internal.AssessWin(playerHand, opponentHand, tt.boardCards)
+			board, _ := typing.FromStrings(tt.boardCards)
+			_, err := internal.AssessWin(playerHand, opponentHand, board)
 			assert.Error(t, err)
 		})
 	}

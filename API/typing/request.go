@@ -12,8 +12,8 @@ type Request struct {
 }
 
 type CardRequest struct {
-	PlayerHand    [2]Card
-	OpponentHands [][2]Card
+	PlayerHand    []Card
+	OpponentHands [][]Card
 	BoardCards    []Card
 }
 
@@ -37,13 +37,13 @@ func (req Request) ConvertsRequest() (CardRequest, error) {
 	seenCards := make([]bool, 52)
 	cardReq := CardRequest{}
 
-	for i, cardString := range req.PlayerHand {
+	for _, cardString := range req.PlayerHand {
 		card, err := NewCard(cardString)
 		if err != nil || seenCards[card.ToInt()] {
 			return CardRequest{}, util.BadInput
 		}
 		seenCards[card.ToInt()] = true
-		cardReq.PlayerHand[i] = card
+		cardReq.PlayerHand = append(cardReq.PlayerHand, card)
 	}
 
 	for _, cardString := range req.BoardCards {
@@ -56,7 +56,7 @@ func (req Request) ConvertsRequest() (CardRequest, error) {
 	}
 
 	if len(req.OpponentHand) == 2 {
-		hand := [2]Card{}
+		hand := make([]Card, 2)
 		for i, cardString := range req.OpponentHand {
 			card, err := NewCard(cardString)
 			if err != nil || seenCards[card.ToInt()] {

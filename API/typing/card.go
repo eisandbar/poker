@@ -47,14 +47,22 @@ func CardFromInt(input int) (Card, error) {
 	return NewCard(values[input/4] + suits[input%4])
 }
 
-func ConvertStrings(cards []string) ([]int, error) {
+func ToInts(cards []Card) []int {
 	res := make([]int, len(cards))
-	for i, stringCard := range cards {
-		card, err := NewCard(stringCard)
+	for i, card := range cards {
+		res[i] = card.ToInt()
+	}
+	return res
+}
+
+func FromStrings(cards []string) ([]Card, error) {
+	res := make([]Card, len(cards))
+	var err error
+	for i, card := range cards {
+		res[i], err = NewCard(card)
 		if err != nil {
 			return nil, err
 		}
-		res[i] = card.ToInt()
 	}
 	return res, nil
 }
