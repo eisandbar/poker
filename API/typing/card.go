@@ -10,6 +10,8 @@ type Card struct {
 	card string
 }
 
+const CardsInDeck = 52
+
 var values = [13]string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 var suits = [4]string{"D", "C", "H", "S"}
 
@@ -41,7 +43,7 @@ func (c Card) ToInt() int {
 }
 
 func CardFromInt(input int) (Card, error) {
-	if input < 0 || input >= 52 {
+	if input < 0 || input >= CardsInDeck {
 		return Card{}, util.BadInput
 	}
 	return NewCard(values[input/4] + suits[input%4])

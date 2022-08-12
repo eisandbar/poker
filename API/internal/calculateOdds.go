@@ -11,7 +11,7 @@ func CalculateOdds(req typing.CardRequest) typing.Odds {
 	oddsChan := make(chan typing.Odds)
 	for _, hand := range req.OpponentHands {
 		opponent := typing.ToInts(hand)
-		go recursive(oddsChan, player, opponent, board, 52)
+		go recursive(oddsChan, player, opponent, board, typing.CardsInDeck)
 		newOdds := <-oddsChan
 		odds = merge(odds, newOdds)
 	}
@@ -22,7 +22,7 @@ func recursive(oddsChan chan<- typing.Odds, player, opponent, board []int, prev 
 	var odds typing.Odds
 	if len(board) < 5 { // fill board
 		newOddsChan := make(chan typing.Odds)
-		for i := prev - 1; i >= 0 && i < 52; i-- {
+		for i := prev - 1; i >= 0 && i < typing.CardsInDeck; i-- {
 			temp := make([]int, len(board), len(board)+1)
 			copy(temp, board)
 
