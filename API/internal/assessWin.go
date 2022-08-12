@@ -3,7 +3,6 @@ package internal
 import (
 	"eisandbar/poker/util"
 	"fmt"
-	"sort"
 )
 
 // Given player hands and board cards, find the strongest combination for each player and decide who wins
@@ -84,14 +83,27 @@ func updateCombo(combo int, priority, cards []int) (int, []int) {
 
 // Given 5 cards calculates their combo value
 func comboValue(cards []int) (int, []int) {
-	sort.Slice(cards, func(i, j int) bool { return cards[i] > cards[j] })
+	sortCards(cards)
+	values := getValues(cards)
 	for _, checker := range checkers {
-		if combo, priority, is := checker(cards); is {
-			return combo, append(priority, getValues(cards)...)
+		if combo, priority, is := checker(cards, values); is {
+			return combo, append(priority, values...)
 		}
 	}
 
-	return 0, getValues(cards)
+	return 0, values
+}
+
+// sorts cards in decreasing order
+func sortCards(cards []int) {
+	n := len(cards)
+	for i := 0; i < n; i++ {
+		for j := i; j < n; j++ {
+			if cards[j] > cards[i] {
+				cards[i], cards[j] = cards[j], cards[i]
+			}
+		}
+	}
 }
 
 // Given two combo values, calculate which one is stronger

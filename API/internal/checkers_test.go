@@ -28,7 +28,8 @@ func TestIsStraight(t *testing.T) {
 		intCards := typing.ToInts(cards)
 		assert.NoError(t, err)
 		sort.Slice(intCards, func(i, j int) bool { return intCards[i] > intCards[j] })
-		combo, _, is := isStraight(intCards)
+		values := getValues(intCards)
+		combo, _, is := isStraight(intCards, values)
 		assert.Equal(t, true, is)
 		assert.Equal(t, Straight, combo)
 	}
@@ -38,7 +39,8 @@ func TestIsTwoPair(t *testing.T) {
 	cards, err := typing.FromStrings([]string{"9D", "9S", "7C", "5S", "5D"})
 	intCards := typing.ToInts(cards)
 	assert.NoError(t, err)
-	combo, _, is := isTwoPair(intCards)
+	values := getValues(intCards)
+	combo, _, is := isTwoPair(intCards, values)
 	assert.Equal(t, true, is)
 	assert.Equal(t, TwoPair, combo)
 }
