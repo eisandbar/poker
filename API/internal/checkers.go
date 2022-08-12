@@ -56,8 +56,10 @@ func isStraight(cards []int) (int, []int, bool) {
 		return 0, nil, false
 	}
 	if cards[0]/4-cards[4]/4 == 4 || cards[0]/4-cards[1]/4 == 8 {
-		if _, _, is := isPair(cards); is {
-			return 0, nil, false
+		for i := 1; i < len(cards); i++ {
+			if cards[i]/4 == cards[i-1]/4 {
+				return 0, nil, false
+			}
 		}
 		return Straight, nil, true
 	}
