@@ -2,7 +2,6 @@ package internal
 
 import (
 	"eisandbar/poker/util"
-	"fmt"
 )
 
 // Given player hands and board cards, find the strongest combination for each player and decide who wins
@@ -23,11 +22,11 @@ const (
 // Given player and opponent hands and all boards cards assess who wins
 func AssessWin(player, opponent, board []int) (int, error) {
 	if len(board) != 5 || len(player) != 2 || len(opponent) != 2 {
-		return 0, fmt.Errorf("Wrong number of cards, %w", util.BadInput)
+		return 0, util.BadInput
 	}
 
 	if checkDuplicates([][]int{player, opponent, board}) {
-		return 0, fmt.Errorf("Duplicate cards detected, %w", util.BadInput)
+		return 0, util.BadInput
 	}
 
 	playerCombo, playerPriority := bestHand(player, board)
