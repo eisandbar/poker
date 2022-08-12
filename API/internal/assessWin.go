@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"eisandbar/poker/typing"
 	"eisandbar/poker/util"
 	"fmt"
 	"sort"
@@ -23,14 +22,12 @@ const (
 )
 
 // Given player and opponent hands and all boards cards assess who wins
-func AssessWin(playerHand, opponentHand, boardCards []typing.Card) (int, error) {
-	if len(boardCards) != 5 || len(playerHand) != 2 || len(opponentHand) != 2 {
-		return 0, util.BadInput
+func AssessWin(player, opponent, board []int) (int, error) {
+	if len(board) != 5 || len(player) != 2 || len(opponent) != 2 {
+		return 0, fmt.Errorf("Wrong number of cards, %w", util.BadInput)
 	}
 
-	player, opponent, board := typing.ToInts(playerHand), typing.ToInts(opponentHand), typing.ToInts(boardCards)
-
-	if checkDuplicates(append(append(player, opponent...), board...)) {
+	if checkDuplicates([][]int{player, opponent, board}) {
 		return 0, fmt.Errorf("Duplicate cards detected, %w", util.BadInput)
 	}
 
@@ -39,11 +36,14 @@ func AssessWin(playerHand, opponentHand, boardCards []typing.Card) (int, error) 
 	return compareCombo(playerCombo, opponentCombo, playerPriority, opponentPriority)
 }
 
-func checkDuplicates(input []int) bool {
-	sort.Ints(input)
-	for i := 1; i < len(input); i++ {
-		if input[i] == input[i-1] {
-			return true
+func checkDuplicates(cardGroups [][]int) bool {
+	seen := make([]bool, 52)
+	for _, cards := range cardGroups {
+		for _, card := range cards {
+			if seen[card] {
+				return true
+			}
+			seen[card] = true
 		}
 	}
 	return false
@@ -91,18 +91,21 @@ func comboValue(cards []int) (int, []int) {
 		}
 	}
 
-	return 0, cards
+	return 0, getValues(cards)
 }
 
 // Given two combo values, calculate which one is stronger
 // 1 means comboA is stronger, -1 meas comboB is stronger and 0 means a draw
 func compareCombo(comboA, comboB int, priorityA, priorityB []int) (int, error) {
+	// Comparing the combo
 	if comboA > comboB {
 		return 1, nil
 	}
 	if comboA < comboB {
 		return -1, nil
 	}
+
+	// comparing the kickers
 	if len(priorityA) != len(priorityB) {
 		return 0, util.BadInput
 	}
@@ -114,5 +117,7 @@ func compareCombo(comboA, comboB int, priorityA, priorityB []int) (int, error) {
 			return -1, nil
 		}
 	}
+
+	// both hands are equal in value
 	return 0, nil
 }

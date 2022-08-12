@@ -54,3 +54,17 @@ func TestCalculateOdds(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkCalculateOdds(b *testing.B) {
+	b.ResetTimer()
+	req := typing.Request{
+		PlayerHand:   []string{"AH", "AS"},
+		OpponentHand: []string{"KC", "KD"},
+	}
+
+	cardReq, err := req.ConvertsRequest()
+	assert.NoError(b, err)
+	for i := 0; i < b.N; i++ {
+		internal.CalculateOdds(cardReq)
+	}
+}

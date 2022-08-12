@@ -5,30 +5,40 @@ import (
 )
 
 func CalculateOdds(req typing.CardRequest) typing.Odds {
-	var odds typing.Odds
 
+	player, board := typing.ToInts(req.PlayerHand), typing.ToInts(req.BoardCards)
+	var odds typing.Odds
+	oddsChan := make(chan typing.Odds)
 	for _, hand := range req.OpponentHands {
-		odds = merge(odds, recursive(req.PlayerHand, hand, req.BoardCards, 53))
+		opponent := typing.ToInts(hand)
+		go recursive(oddsChan, player, opponent, board, 52)
+		newOdds := <-oddsChan
+		odds = merge(odds, newOdds)
 	}
 	return odds
 }
 
-func recursive(player, opponent, board []typing.Card, prev int) typing.Odds {
-
+func recursive(oddsChan chan<- typing.Odds, player, opponent, board []int, prev int) {
 	var odds typing.Odds
-	if len(board) < 5 {
-		for i := prev - 1; i >= 0; i-- {
-			temp, err := typing.CardFromInt(i)
-			if err != nil {
-				continue
-			}
-			odds = merge(odds, recursive(player, opponent, append(board, temp), i))
+	if len(board) < 5 { // fill board
+		newOddsChan := make(chan typing.Odds)
+		for i := prev - 1; i >= 0 && i < 52; i-- {
+			temp := make([]int, len(board), len(board)+1)
+			copy(temp, board)
+
+			go recursive(newOddsChan, player, opponent, append(temp, i), i)
+
 		}
-	} else {
+		for i := prev - 1; i >= 0; i-- {
+			newOdds := <-newOddsChan
+			odds = merge(odds, newOdds)
+		}
+	} else { // calculate winner
 
 		res, err := AssessWin(player, opponent, board)
 		if err != nil {
-			return odds
+			oddsChan <- typing.Odds{}
+			return
 		}
 		switch res {
 		case 1:
@@ -39,7 +49,7 @@ func recursive(player, opponent, board []typing.Card, prev int) typing.Odds {
 			odds.Draw++
 		}
 	}
-	return odds
+	oddsChan <- odds
 }
 
 func merge(a, b typing.Odds) typing.Odds {
