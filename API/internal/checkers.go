@@ -1,29 +1,21 @@
 package internal
 
-var checkers = []func(a, b []int) (int, []int, bool){isStraightFlush, isQuads, isFullHouse, isFlush, isStraight, isSet, isTwoPair, isPair}
+var checkers = []func(a []int) (int, []int, bool){isStraightFlush, isQuads, isFullHouse, isFlush, isStraight, isSet, isTwoPair, isPair}
 
-func getValues(cards []int) []int {
-	temp := make([]int, len(cards))
-	for i, card := range cards {
-		temp[i] = card / 4
-	}
-	return temp
-}
-
-func isPair(cards, values []int) (int, []int, bool) {
-	for i := 1; i < len(values); i++ {
-		if values[i] == values[i-1] {
-			return Pair, []int{values[i]}, true
+func isPair(cards []int) (int, []int, bool) {
+	for i := 1; i < len(cards); i++ {
+		if cards[i]/4 == cards[i-1]/4 {
+			return Pair, []int{cards[i]}, true
 		}
 	}
 	return 0, nil, false
 }
 
-func isTwoPair(cards, values []int) (int, []int, bool) {
+func isTwoPair(cards []int) (int, []int, bool) {
 	pairs := []int{}
-	for i := 1; i < len(values); i++ {
-		if values[i] == values[i-1] {
-			pairs = append(pairs, values[i])
+	for i := 1; i < len(cards); i++ {
+		if cards[i]/4 == cards[i-1]/4 {
+			pairs = append(pairs, cards[i])
 			i++
 		}
 	}
@@ -37,44 +29,44 @@ func isTwoPair(cards, values []int) (int, []int, bool) {
 	return 0, nil, false
 }
 
-func isSet(cards, values []int) (int, []int, bool) {
-	for i := 2; i < len(values); i++ {
-		if values[i] == values[i-1] && values[i] == values[i-2] {
-			return Set, []int{values[i]}, true
+func isSet(cards []int) (int, []int, bool) {
+	for i := 2; i < len(cards); i++ {
+		if cards[i]/4 == cards[i-1]/4 && cards[i]/4 == cards[i-2]/4 {
+			return Set, []int{cards[i]}, true
 		}
 	}
 	return 0, nil, false
 }
 
-func isFullHouse(cards, values []int) (int, []int, bool) {
-	if len(values) != 5 {
+func isFullHouse(cards []int) (int, []int, bool) {
+	if len(cards) != 5 {
 		return 0, nil, false
 	}
-	if values[0] == values[1] && values[3] == values[4] && (values[2] == values[0] || values[2] == values[4]) {
-		if values[2] == values[0] {
-			return FullHouse, []int{values[2], values[4]}, true
+	if cards[0]/4 == cards[1]/4 && cards[3]/4 == cards[4]/4 && (cards[2]/4 == cards[0]/4 || cards[2]/4 == cards[4]/4) {
+		if cards[2]/4 == cards[0]/4 {
+			return FullHouse, []int{cards[2], cards[4]}, true
 		} else {
 
-			return FullHouse, []int{values[2], values[0]}, true
+			return FullHouse, []int{cards[2], cards[0]}, true
 		}
 	}
 	return 0, nil, false
 }
 
-func isStraight(cards, values []int) (int, []int, bool) {
-	if len(values) != 5 {
+func isStraight(cards []int) (int, []int, bool) {
+	if len(cards) != 5 {
 		return 0, nil, false
 	}
-	if _, _, is := isPair(cards, values); is {
-		return 0, nil, false
-	}
-	if values[0]-values[4] == 4 || values[0]-values[1] == 8 {
+	if cards[0]/4-cards[4]/4 == 4 || cards[0]/4-cards[1]/4 == 8 {
+		if _, _, is := isPair(cards); is {
+			return 0, nil, false
+		}
 		return Straight, nil, true
 	}
 	return 0, nil, false
 }
 
-func isFlush(cards, values []int) (int, []int, bool) {
+func isFlush(cards []int) (int, []int, bool) {
 	if len(cards) != 5 {
 		return 0, nil, false
 	}
@@ -87,21 +79,21 @@ func isFlush(cards, values []int) (int, []int, bool) {
 	return Flush, nil, true
 }
 
-func isStraightFlush(cards, values []int) (int, []int, bool) {
-	_, _, flush := isFlush(cards, values)
-	_, _, straight := isStraight(cards, values)
+func isStraightFlush(cards []int) (int, []int, bool) {
+	_, _, flush := isFlush(cards)
+	_, _, straight := isStraight(cards)
 	if flush && straight {
 		return StraightFlush, nil, true
 	}
 	return 0, nil, false
 }
 
-func isQuads(cards, values []int) (int, []int, bool) {
-	if len(values) != 5 {
+func isQuads(cards []int) (int, []int, bool) {
+	if len(cards) != 5 {
 		return 0, nil, false
 	}
-	if values[1] == values[2] && values[1] == values[3] && (values[0] == values[1] || values[4] == values[1]) {
-		return Quads, []int{values[1]}, true
+	if cards[1]/4 == cards[2]/4 && cards[1]/4 == cards[3]/4 && (cards[0]/4 == cards[1]/4 || cards[4]/4 == cards[1]/4) {
+		return Quads, []int{cards[1]}, true
 	}
 	return 0, nil, false
 }

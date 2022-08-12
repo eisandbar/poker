@@ -84,14 +84,13 @@ func updateCombo(combo int, priority, cards []int) (int, []int) {
 // Given 5 cards calculates their combo value
 func comboValue(cards []int) (int, []int) {
 	sortCards(cards)
-	values := getValues(cards)
 	for _, checker := range checkers {
-		if combo, priority, is := checker(cards, values); is {
-			return combo, append(priority, values...)
+		if combo, priority, is := checker(cards); is {
+			return combo, append(priority, cards...)
 		}
 	}
 
-	return 0, values
+	return 0, cards
 }
 
 // sorts cards in decreasing order
@@ -122,10 +121,10 @@ func compareCombo(comboA, comboB int, priorityA, priorityB []int) (int, error) {
 		return 0, util.BadInput
 	}
 	for i, value := range priorityA {
-		if value > priorityB[i] {
+		if value/4 > priorityB[i]/4 {
 			return 1, nil
 		}
-		if value < priorityB[i] {
+		if value/4 < priorityB[i]/4 {
 			return -1, nil
 		}
 	}
