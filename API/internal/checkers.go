@@ -12,19 +12,17 @@ func isPair(cards []int) (int, []int, bool) {
 }
 
 func isTwoPair(cards []int) (int, []int, bool) {
-	pairs := []int{}
+	pairs := 0
 	for i := 1; i < len(cards); i++ {
 		if cards[i]/4 == cards[i-1]/4 {
-			pairs = append(pairs, cards[i])
+			pairs++
 			i++
 		}
 	}
 
-	if len(pairs) == 2 {
-		if pairs[1] > pairs[0] {
-			pairs[0], pairs[1] = pairs[1], pairs[0]
-		}
-		return TwoPair, pairs, true
+	if pairs == 2 {
+		// if there are 2 pairs, the second and fourth card are always part of them
+		return TwoPair, []int{cards[1], cards[3]}, true
 	}
 	return 0, nil, false
 }
