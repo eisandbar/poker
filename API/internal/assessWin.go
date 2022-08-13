@@ -29,7 +29,7 @@ func AssessWin(player, opponent, board []int) (int, error) {
 
 	playerCombo, playerCards := bestHand(player, board)
 	opponentCombo, opponentCards := bestHand(opponent, board)
-	return compareCombo(playerCombo, opponentCombo, playerCards, opponentCards)
+	return compareCombo(playerCombo, opponentCombo, playerCards, opponentCards), nil
 }
 
 func checkDuplicates(cardGroups [][]int) bool {
@@ -71,8 +71,8 @@ func bestHand(hand, board []int) (int, []int) {
 
 func updateCombo(combo int, oldCards, cards []int) (int, []int) {
 	newCombo := comboValue(cards)
-	better, err := compareCombo(newCombo, combo, oldCards, cards)
-	if err == nil && better == 1 {
+	better := compareCombo(newCombo, combo, cards, oldCards)
+	if better == 1 {
 		return newCombo, cards
 	}
 	return combo, oldCards
@@ -104,24 +104,24 @@ func sortCards(cards []int) {
 
 // Given two combo values, calculate which one is stronger
 // 1 means comboA is stronger, -1 meas comboB is stronger and 0 means a draw
-func compareCombo(comboA, comboB int, cardsA, cardsB []int) (int, error) {
+func compareCombo(comboA, comboB int, cardsA, cardsB []int) int {
 	// Comparing the combo
 	if comboA > comboB {
-		return 1, nil
+		return 1
 	}
 	if comboA < comboB {
-		return -1, nil
+		return -1
 	}
 
 	for i := 0; i < 5; i++ {
 		if cardsA[i]/4 > cardsB[i]/4 {
-			return 1, nil
+			return 1
 		}
 		if cardsA[i]/4 < cardsB[i]/4 {
-			return -1, nil
+			return -1
 		}
 	}
 
 	// both hands are equal in value
-	return 0, nil
+	return 0
 }
