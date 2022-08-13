@@ -21,7 +21,7 @@ func TestCalculateOdds(t *testing.T) {
 				PlayerHand:   []string{"KH", "KS"},
 				OpponentHand: []string{"KC", "KD"},
 				BoardCards:   []string{"JH", "TC", "4S"}},
-			odds: typing.Odds{},
+			odds: typing.Odds{Draw: 1},
 		},
 		{
 			name: "Aces vs Kings",
@@ -29,15 +29,23 @@ func TestCalculateOdds(t *testing.T) {
 				PlayerHand:   []string{"AH", "AS"},
 				OpponentHand: []string{"KC", "KD"},
 				BoardCards:   []string{}},
-			odds: typing.Odds{.81, 0, .185},
+			odds: typing.Odds{Win: .8106, Draw: .0038, Lose: .1855},
 		},
 		{
 			name: "Aces vs AK",
 			req: typing.Request{
 				PlayerHand:   []string{"AH", "AS"},
-				OpponentHand: []string{"AC", "KH"},
+				OpponentHand: []string{"AC", "KD"},
 				BoardCards:   []string{}},
-			odds: typing.Odds{.92, 0, .058},
+			odds: typing.Odds{Win: .9195, Draw: .0125, Lose: .0680},
+		},
+		{
+			name: "J9 vs Q6",
+			req: typing.Request{
+				PlayerHand:   []string{"JH", "9H"},
+				OpponentHand: []string{"QC", "6C"},
+				BoardCards:   []string{}},
+			odds: typing.Odds{Win: .4450, Draw: .0086, Lose: .5461},
 		},
 	}
 	for _, tt := range testData {
@@ -50,6 +58,7 @@ func TestCalculateOdds(t *testing.T) {
 			got.Normalize()
 			assert.InDelta(t, tt.odds.Win, got.Win, util.Accuracy)
 			assert.InDelta(t, tt.odds.Lose, got.Lose, util.Accuracy)
+			assert.InDelta(t, tt.odds.Draw, got.Draw, util.Accuracy)
 
 		})
 	}
