@@ -12,6 +12,7 @@ func TestIsStraight(t *testing.T) {
 	testData := [][]string{
 		[]string{"9D", "8S", "7C", "6D", "5D"},
 		[]string{"JC", "TC", "QH", "8S", "9D"},
+		[]string{"AC", "5C", "4H", "3S", "2D"},
 	}
 	for _, tt := range testData {
 		cards, err := typing.FromStrings(tt)
@@ -34,4 +35,17 @@ func TestIsTwoPair(t *testing.T) {
 	combo, is := isTwoPair(intCards)
 	assert.Equal(t, true, is)
 	assert.Equal(t, TwoPair, combo)
+}
+
+func TestCardSort(t *testing.T) {
+	cards := []int{1, 2, 3, 7, 4, 5, 0}
+	sortCards(cards)
+	assert.Equal(t, []int{7, 5, 4, 3, 2, 1, 0}, cards)
+}
+
+func TestCompareCombo(t *testing.T) {
+	cardsA := []int{31, 20, 17, 5, 1}
+	cardsB := []int{29, 21, 19, 6, 3}
+	res := compareCombo(0, 0, cardsA, cardsB)
+	assert.Equal(t, 0, res)
 }
