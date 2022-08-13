@@ -1,3 +1,3 @@
 package util
 
-const Accuracy = 0.015 // 1.5% odds error
+const Accuracy = 0.001 // 0.1% odds error
