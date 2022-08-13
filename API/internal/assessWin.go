@@ -5,10 +5,8 @@ import (
 )
 
 // Given player hands and board cards, find the strongest combination for each player and decide who wins
-// For each board, a player has 31 possible combinations
-
 const (
-	High int = iota
+	High int = iota * 1000
 	Pair
 	TwoPair
 	Set
@@ -29,9 +27,9 @@ func AssessWin(player, opponent, board []int) (int, error) {
 		return 0, util.BadInput
 	}
 
-	playerCombo, playerPriority, playerCards := bestHand(player, board)
-	opponentCombo, opponentPriority, opponentCards := bestHand(opponent, board)
-	return compareCombo(playerCombo, opponentCombo, playerPriority, opponentPriority, playerCards, opponentCards)
+	playerCombo, playerCards := bestHand(player, board)
+	opponentCombo, opponentCards := bestHand(opponent, board)
+	return compareCombo(playerCombo, opponentCombo, playerCards, opponentCards)
 }
 
 func checkDuplicates(cardGroups [][]int) bool {
@@ -47,15 +45,15 @@ func checkDuplicates(cardGroups [][]int) bool {
 	return false
 }
 
-func bestHand(hand, board []int) (int, []int, []int) {
+func bestHand(hand, board []int) (int, []int) {
 	cards := []int(board)
-	combo, priority := comboValue(board)
+	combo := comboValue(board)
 	for _, card := range hand {
 		for i, _ := range board {
 			temp := make([]int, 5)
 			copy(temp, board)
 			temp[i] = card
-			combo, priority, cards = updateCombo(combo, priority, cards, temp)
+			combo, cards = updateCombo(combo, cards, temp)
 		}
 	}
 	for i := range board {
@@ -65,31 +63,31 @@ func bestHand(hand, board []int) (int, []int, []int) {
 			copy(temp, board)
 			temp[i] = hand[0]
 			temp[j] = hand[1]
-			combo, priority, cards = updateCombo(combo, priority, cards, temp)
+			combo, cards = updateCombo(combo, cards, temp)
 		}
 	}
-	return combo, priority, cards
+	return combo, cards
 }
 
-func updateCombo(combo int, priority, oldCards, cards []int) (int, []int, []int) {
-	newCombo, newPriority := comboValue(cards)
-	better, err := compareCombo(newCombo, combo, newPriority, priority, oldCards, cards)
+func updateCombo(combo int, oldCards, cards []int) (int, []int) {
+	newCombo := comboValue(cards)
+	better, err := compareCombo(newCombo, combo, oldCards, cards)
 	if err == nil && better == 1 {
-		return newCombo, newPriority, cards
+		return newCombo, cards
 	}
-	return combo, priority, oldCards
+	return combo, oldCards
 }
 
 // Given 5 cards calculates their combo value
-func comboValue(cards []int) (int, []int) {
+func comboValue(cards []int) int {
 	sortCards(cards)
 	for _, checker := range checkers {
-		if combo, priority, is := checker(cards); is {
-			return combo, priority
+		if combo, is := checker(cards); is {
+			return combo
 		}
 	}
 
-	return 0, nil
+	return 0
 }
 
 // sorts cards in decreasing order
@@ -106,26 +104,13 @@ func sortCards(cards []int) {
 
 // Given two combo values, calculate which one is stronger
 // 1 means comboA is stronger, -1 meas comboB is stronger and 0 means a draw
-func compareCombo(comboA, comboB int, priorityA, priorityB, cardsA, cardsB []int) (int, error) {
+func compareCombo(comboA, comboB int, cardsA, cardsB []int) (int, error) {
 	// Comparing the combo
 	if comboA > comboB {
 		return 1, nil
 	}
 	if comboA < comboB {
 		return -1, nil
-	}
-
-	// comparing the kickers
-	if len(priorityA) != len(priorityB) {
-		return 0, util.BadInput
-	}
-	for i, value := range priorityA {
-		if value/4 > priorityB[i]/4 {
-			return 1, nil
-		}
-		if value/4 < priorityB[i]/4 {
-			return -1, nil
-		}
 	}
 
 	for i := 0; i < 5; i++ {
