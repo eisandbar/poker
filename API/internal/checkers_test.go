@@ -30,11 +30,12 @@ func TestIsStraight(t *testing.T) {
 
 func TestIsTwoPair(t *testing.T) {
 	cards, err := typing.FromStrings([]string{"9D", "9S", "7C", "5S", "5D"})
+	priority := getPriority(cards[1].ToInt(), cards[3].ToInt())
 	intCards := typing.ToInts(cards)
 	assert.NoError(t, err)
 	combo, is := isTwoPair(intCards)
 	assert.Equal(t, true, is)
-	assert.Equal(t, TwoPair, combo)
+	assert.Equal(t, TwoPair+priority, combo)
 }
 
 func TestCardSort(t *testing.T) {
