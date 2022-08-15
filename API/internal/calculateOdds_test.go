@@ -65,15 +65,26 @@ func TestCalculateOdds(t *testing.T) {
 }
 
 func BenchmarkCalculateOdds(b *testing.B) {
-	b.ResetTimer()
-	req := typing.Request{
-		PlayerHand:   []string{"AH", "AS"},
-		OpponentHand: []string{"KC", "KD"},
+	hands := [][]string{
+		{"KC", "KD"},
+		{"KC", "KD"},
+		{"KC", "KD"},
+		{"KC", "KD"},
+		{"KC", "KD"},
+		{"KC", "KD"},
 	}
-
-	cardReq, err := req.ConvertsRequest()
-	assert.NoError(b, err)
+	playerHand, _ := typing.FromStrings([]string{"AH", "AS"})
+	opponentHands := make([][]typing.Card, 0)
+	for _, hand := range hands {
+		temp, _ := typing.FromStrings(hand)
+		opponentHands = append(opponentHands, temp)
+	}
+	b.ResetTimer()
+	req := typing.CardRequest{
+		PlayerHand:    playerHand,
+		OpponentHands: opponentHands,
+	}
 	for i := 0; i < b.N; i++ {
-		internal.CalculateOdds(cardReq)
+		internal.CalculateOdds(req)
 	}
 }
