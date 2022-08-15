@@ -1,10 +1,12 @@
 package internal_test
 
 import (
-	"eisandbar/poker/internal"
-	"eisandbar/poker/typing"
-	"eisandbar/poker/util"
 	"testing"
+
+	"github.com/eisandbar/poker/internal"
+	"github.com/eisandbar/poker/typing"
+
+	"github.com/eisandbar/poker/util"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -1,7 +1,7 @@
 package typing
 
 import (
-	"eisandbar/poker/util"
+	"github.com/eisandbar/poker/util"
 
 	"testing"
 

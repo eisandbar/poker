@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"eisandbar/poker/typing"
+	"github.com/eisandbar/poker/typing"
 )
 
 func CalculateOdds(req typing.CardRequest) typing.Odds {

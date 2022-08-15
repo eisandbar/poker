@@ -1,4 +1,4 @@
-module eisandbar/poker
+module github.com/eisandbar/poker
 
 go 1.17
 
