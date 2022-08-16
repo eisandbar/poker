@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"eisandbar/poker/util"
+	"github.com/eisandbar/poker/util"
 )
 
 // Given player hands and board cards, find the strongest combination for each player and decide who wins

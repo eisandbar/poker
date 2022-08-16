@@ -1,8 +1,8 @@
 package typing_test
 
 import (
-	"eisandbar/poker/typing"
-	"eisandbar/poker/util"
+	"github.com/eisandbar/poker/typing"
+	"github.com/eisandbar/poker/util"
 
 	"testing"
 
