@@ -1,3 +1,6 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/eisandbar/poker)](https://goreportcard.com/report/github.com//eisandbar/poker)
+
+
 # Poker
 A poker odds calculator and possibly more
 
